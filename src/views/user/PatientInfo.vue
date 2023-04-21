@@ -1,34 +1,26 @@
-<script setup lang="ts"></script>
-
 <template>
   <div class="patient-page">
+    <!--      导航栏-->
     <cp-nav-bar title="家庭档案" />
     <!-- 头部选择提示 -->
     <div class="patient-change" v-if="false">
       <h3>请选择患者信息</h3>
       <p>以便医生给出更准确的治疗，信息仅医生可见</p>
     </div>
+    <!--      患者列表-->
     <div class="patient-list">
-      <div class="patient-item">
+      <div class="patient-item" v-for="item in patientList" :key="item.id">
         <div class="info">
-          <span class="name">李富贵</span>
-          <span class="id">321***********6164</span>
-          <span>男</span>
-          <span>32岁</span>
+          <span class="name">{{ item.name }}</span>
+          <span class="id">{{ item.idCard.replace(/^(.{6})(?:\d+)(.{4})$/, '\$1******\$2') }}</span>
+          <span>{{ item.genderValue }}</span>
+          <span>{{ item.age }}</span>
         </div>
         <div class="icon"><cp-icon name="user-edit" /></div>
-        <div class="tag">默认</div>
+        <div class="tag" v-if="item.defaultFlag === 1">默认</div>
       </div>
-      <div class="patient-item">
-        <div class="info">
-          <span class="name">李富贵</span>
-          <span class="id">321***********6164</span>
-          <span>男</span>
-          <span>32岁</span>
-        </div>
-        <div class="icon"><cp-icon name="user-edit" /></div>
-      </div>
-      <div class="patient-add">
+      <!--        添加患者-->
+      <div class="patient-add" v-if="patientList.length < 6">
         <cp-icon name="user-add" />
         <p>添加患者</p>
       </div>
@@ -36,11 +28,23 @@
     </div>
     <!-- 患者选择下一步 -->
     <div class="patient-next" v-if="false">
-      <van-button type="primary"  round block>下一步</van-button>
+      <van-button type="primary" round block>下一步</van-button>
     </div>
   </div>
 </template>
-
+<script setup lang="ts">
+import { getPatientList } from '@/api/user'
+import type { PatientList } from '@/types/user'
+import { ref, onMounted } from 'vue'
+const patientList = ref<PatientList>([])
+const getPatients = async () => {
+  const { data } = await getPatientList()
+  patientList.value = data
+}
+onMounted(() => {
+  getPatients()
+})
+</script>
 <style lang="scss" scoped>
 .patient-page {
   padding: 46px 0 80px;

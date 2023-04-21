@@ -28,7 +28,7 @@
         </van-col>
       </van-row>
     </div>
-    <div class="user-page-order">
+    <div class="user-page-order" v-if="user.orderInfo">
       <div class="head">
         <h3>药品订单</h3>
         <router-link to="/order">全部订单 <van-icon name="arrow" /></router-link>
@@ -63,26 +63,63 @@
     <!-- 2. 快捷工具 -->
     <div class="user-page-group">
       <h3>快捷工具</h3>
-      <van-cell title="标题" is-link :border="false">
-        <template #icon><cp-icon name="user-tool-01" /></template>
-      </van-cell>
-      <van-cell title="标题" is-link :border="false">
-        <template #icon><cp-icon name="user-tool-01" /></template>
+      <van-cell
+        v-for="(item, index) in tools"
+        :key="index"
+        :title="item.label"
+        is-link
+        :border="false"
+        :to="item.path"
+      >
+        <template #icon><cp-icon :name="`user-tool-0${index + 1}`" /></template>
       </van-cell>
     </div>
     <!-- 3. 退出登录 -->
-    <a class="logout" href="javascript:;">退出登录</a>
+    <a class="logout" href="javascript:;" @click="logout">退出登录</a>
   </div>
 </template>
 <script setup lang="ts">
+import { showConfirmDialog, showSuccessToast } from 'vant'
 import { getUserInfo } from '@/api/user'
 import type { UserInfo } from '@/types/user'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores'
 import { ref, onMounted } from 'vue'
+// 工具栏数据
+const tools = [
+  { label: '我的问诊', path: '/user/consult' },
+  { label: '我的处方', path: '/' },
+  { label: '家庭档案', path: '/user/patient' },
+  { label: '地址管理', path: '/user/address' },
+  { label: '我的评价', path: '/' },
+  { label: '官方客服', path: '/' },
+  { label: '设置', path: '/' }
+]
+// 定义路由对象
+const router = useRouter()
+// 定义仓库对象
+const store = useUserStore()
+// 定义响应式用户数据
 const user = ref({} as UserInfo)
-onMounted(async () => {
+const getUserData = async () => {
   const { data } = await getUserInfo()
   user.value = data
-  console.log(data)
+}
+// 退出登录
+const logout = async () => {
+  await showConfirmDialog({
+    title: '提示',
+    message: '确定退出登录？'
+  })
+  // 清除用户数据
+  store.deleteUser()
+  // 跳转路由
+  showSuccessToast('退出成功')
+  await router.push('/login')
+}
+
+onMounted(() => {
+  getUserData()
 })
 </script>
 

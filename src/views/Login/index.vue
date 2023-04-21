@@ -81,9 +81,9 @@ const clickRight = () => {
 const agree = ref(false)
 const isShowPass = ref(false)
 // 手机号
-const mobile = ref('')
+const mobile = ref('13230000100')
 // 密码
-const password = ref('')
+const password = ref('abc12345')
 // 验证码
 const codeword = ref('')
 // 定时器计数

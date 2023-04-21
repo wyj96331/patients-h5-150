@@ -6,6 +6,7 @@ import pinia from './stores'
 import 'virtual:svg-icons-register'
 // 引入全局样式
 import '@/styles/index.scss'
+import 'vant/es/dialog/style'
 // 创建跟实例
 const app = createApp(App)
 // 注册pinia和router
