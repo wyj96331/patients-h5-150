@@ -20,7 +20,7 @@
         <div class="tag" v-if="item.defaultFlag === 1">默认</div>
       </div>
       <!--        添加患者-->
-      <div class="patient-add" v-if="patientList.length < 6">
+      <div class="patient-add" v-if="patientList.length < 6" @click="showPopup()">
         <cp-icon name="user-add" />
         <p>添加患者</p>
       </div>
@@ -30,12 +30,58 @@
     <div class="patient-next" v-if="false">
       <van-button type="primary" round block>下一步</van-button>
     </div>
+    <!-- 侧边栏 -->
+    <van-popup v-model:show="show" position="right">
+      <cp-nav-bar title="添加患者" right-text="保存" :back="closePopup"></cp-nav-bar>
+      <!-- 表单 -->
+      <van-form autocomplete="off">
+        <van-field v-model="patient.name" label="真实姓名" placeholder="请输入真实姓名" />
+        <van-field v-model="patient.idCard" label="身份证号" placeholder="请输入身份证号" />
+        <van-field label="性别">
+          <!-- 单选按钮组件 -->
+          <template #input>
+            <cp-radio-btn v-model="patient.gender" :options="options"></cp-radio-btn>
+          </template>
+        </van-field>
+        <van-field label="默认就诊人">
+          <template #input>
+            <van-checkbox round v-model="defaultFlag" />
+          </template>
+        </van-field>
+      </van-form>
+    </van-popup>
   </div>
 </template>
 <script setup lang="ts">
 import { getPatientList } from '@/api/user'
-import type { PatientList } from '@/types/user'
-import { ref, onMounted } from 'vue'
+import type { PatientList, Patient } from '@/types/user'
+import { ref, onMounted, computed } from 'vue'
+const patient = ref<Patient>({
+  name: '',
+  idCard: '',
+  gender: 1,
+  defaultFlag: 0
+})
+const defaultFlag = computed({
+  get() {
+    return patient.value.defaultFlag === 1 ? true : false
+  },
+  set(value) {
+    patient.value.defaultFlag = value ? 1 : 0
+  }
+})
+const options = [
+  { label: '男', value: 1 },
+  { label: '女', value: 0 }
+]
+// 2. 打开侧滑栏
+const show = ref(false)
+const showPopup = () => {
+  show.value = true
+}
+const closePopup = () => {
+  show.value = false
+}
 const patientList = ref<PatientList>([])
 const getPatients = async () => {
   const { data } = await getPatientList()
@@ -46,8 +92,19 @@ onMounted(() => {
 })
 </script>
 <style lang="scss" scoped>
+.van-form {
+  height: 100%;
+  padding-top: 40px;
+  padding-left: 20px;
+}
 .patient-page {
   padding: 46px 0 80px;
+  ::v-deep() {
+    .van-popup {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 .patient-change {
   padding: 15px;
