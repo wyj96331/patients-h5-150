@@ -3,7 +3,7 @@
   <div class="login">
     <div class="login-head">
       <h3>{{ isPassword ? '密码登录' : '短信验证码登录' }}</h3>
-      <a href="javascript:;" @click="isPassword = !isPassword">
+      <a href="javascript:" @click="isPassword = !isPassword">
         <span>{{ isPassword ? '短信验证码登录' : '密码码登录' }}</span>
         <van-icon name="arrow"></van-icon>
       </a>
@@ -51,9 +51,9 @@
       <div class="cp-cell">
         <van-checkbox v-model="agree">
           <span>我已同意</span>
-          <a href="javascript:;">用户协议</a>
+          <a href="javascript:">用户协议</a>
           <span>及</span>
-          <a href="javascript:;">隐私条款</a>
+          <a href="javascript:">隐私条款</a>
         </van-checkbox>
       </div>
       <!--登录按钮-->

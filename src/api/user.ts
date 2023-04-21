@@ -1,5 +1,5 @@
 import { request } from '@/utils/request'
-import type { CodeType, User, data, UserInfo, PatientList, Patient } from '@/types/user'
+import type { CodeType, User, data, UserInfo, PatientList } from '@/types/user'
 /**
  * 密码登录接口
  * @param mobile
