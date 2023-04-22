@@ -16,7 +16,7 @@
           <span>{{ item.genderValue }}</span>
           <span>{{ item.age }}</span>
         </div>
-        <div class="icon"><cp-icon name="user-edit" /></div>
+        <div class="icon"><cp-icon name="user-edit" @click="showPopup(item)" /></div>
         <div class="tag" v-if="item.defaultFlag === 1">默认</div>
       </div>
       <!--        添加患者-->
@@ -32,10 +32,20 @@
     </div>
     <!-- 侧边栏 -->
     <van-popup v-model:show="show" position="right">
-      <cp-nav-bar title="添加患者" right-text="保存" :back="closePopup"></cp-nav-bar>
+      <cp-nav-bar
+        :title="patient.id ? '修改患者信息' : '增加患者信息'"
+        @click-right="submit"
+        right-text="保存"
+        :back="closePopup"
+      ></cp-nav-bar>
       <!-- 表单 -->
       <van-form autocomplete="off">
-        <van-field v-model="patient.name" label="真实姓名" placeholder="请输入真实姓名" />
+        <van-field
+          v-model="patient.name"
+          label="真实姓名"
+          placeholder="请输入真实姓名"
+          @input="handelInput"
+        />
         <van-field v-model="patient.idCard" label="身份证号" placeholder="请输入身份证号" />
         <van-field label="性别">
           <!-- 单选按钮组件 -->
@@ -49,19 +59,32 @@
           </template>
         </van-field>
       </van-form>
+      <van-action-bar v-if="patient.id">
+        <van-action-bar-button
+          @click="deletePatient(patient.id)"
+          type="danger"
+          text="删除"
+        ></van-action-bar-button>
+      </van-action-bar>
     </van-popup>
   </div>
 </template>
 <script setup lang="ts">
-import { getPatientList } from '@/api/user'
+// 引入身份证校验库
+import Validator from 'id-validator'
+import { addPatient, getPatientList, editPatient, delPatient } from '@/api/user'
 import type { PatientList, Patient } from '@/types/user'
 import { ref, onMounted, computed } from 'vue'
-const patient = ref<Patient>({
+import { showConfirmDialog, showFailToast, showSuccessToast } from 'vant'
+const defualtPatient: Patient = {
   name: '',
   idCard: '',
   gender: 1,
   defaultFlag: 0
-})
+}
+// 身份证校验实例
+const validate = new Validator()
+const patient = ref<Patient>({ ...defualtPatient })
 const defaultFlag = computed({
   get() {
     return patient.value.defaultFlag === 1 ? true : false
@@ -76,7 +99,16 @@ const options = [
 ]
 // 2. 打开侧滑栏
 const show = ref(false)
-const showPopup = () => {
+const showPopup = (item?: Patient) => {
+  // 有item参数，编辑状态
+  if (item) {
+    const { id, gender, name, idCard, defaultFlag } = item
+    patient.value = { id, gender, name, idCard, defaultFlag }
+  } else {
+    // 无item参数，添加状态
+    // 重置表单数据
+    patient.value = { ...defualtPatient }
+  }
   show.value = true
 }
 const closePopup = () => {
@@ -86,6 +118,40 @@ const patientList = ref<PatientList>([])
 const getPatients = async () => {
   const { data } = await getPatientList()
   patientList.value = data
+}
+// 提交添加/编辑表单
+const submit = async () => {
+  // 1.校验患者的名字和身份证
+  if (!patient.value.name) return showFailToast('用户名字不能为空')
+  if (!patient.value.idCard) return showFailToast('用户身的份证号码不能为空')
+  if (!validate.isValid(patient.value.idCard)) return showFailToast('身份证格式错误')
+  const { sex } = validate.getInfo(patient.value.idCard)
+  if (patient.value.gender !== sex) return showFailToast('性别不符合')
+  // 2.校验通过 调用api增加数据
+  try {
+    patient.value.id ? await editPatient(patient.value) : await addPatient(patient.value)
+    closePopup()
+    showSuccessToast(patient.value.id ? '修改成功' : '添加成功')
+    await getPatients()
+  } catch (e) {
+    console.log(e)
+  }
+}
+// 删除患者信息
+const deletePatient = async (id: string) => {
+  await showConfirmDialog({
+    title: '提示',
+    message: '确定删除此患者？'
+  })
+  await delPatient(id)
+  showSuccessToast('删除成功')
+  closePopup()
+  await getPatients()
+}
+// 正则替换，让输入的内容只能是文中，输入其他的不显示
+const handelInput = (e: any) => {
+  const input = e.target.value
+  patient.value.name = input.replace(/[^a-zA-Z\u4E00-\u9FA5]/g, '')
 }
 onMounted(() => {
   getPatients()

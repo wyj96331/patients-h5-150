@@ -1,4 +1,18 @@
 :root:root {
+    // 全局颜色变量
+    --color-text: #606266;
+    --color-text-secondary: #909399;
+
+    --color-icon: #409EFF;
+
+    --color-background: #f2f6fc;
+
+    --color-border: #EBEEF5;
+
+    --color-active-bg: #E2E6F1;
+
+    // 弹出层背景颜色变量
+    --popup-background-color: rgba(236,242,249, 0.9);
     // 项目定义变量
     --cp-primary: #16c2a3;
     --cp-plain: #eaf8f6;

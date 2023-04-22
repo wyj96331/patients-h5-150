@@ -22,7 +22,7 @@ const toggleItem = (value: number): void => {
     <a
       class="item"
       :class="{ active: modelValue === item.value }"
-      href="javascript:;"
+      href="javascript:"
       v-for="item in options"
       :key="item.value"
       @click="toggleItem(item.value)"
