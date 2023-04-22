@@ -4,13 +4,19 @@ import DoctorCard from './DoctorCard.vue'
 
 <template>
   <div class="follow-doctor">
-    <div className="head">
+    <!--      className="head" 头部-->
+    <div class="head">
       <p>推荐关注</p>
-      <a href="javascript:;"> 查看更多<i class="van-icon van-icon-arrow" /></a>
+      <a href="javascript:"> 查看更多<i class="van-icon van-icon-arrow" /></a>
     </div>
+    <!--      医生列表-->
     <div class="body">
       <!-- swipe 组件 -->
-      <doctor-card />
+      <van-swipe :width="150" :show-indicators="false" :loop="false">
+        <van-swipe-item v-for="item in 6" :key="item">
+          <doctor-card />
+        </van-swipe-item>
+      </van-swipe>
     </div>
   </div>
 </template>
