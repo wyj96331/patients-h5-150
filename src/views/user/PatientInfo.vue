@@ -73,7 +73,7 @@
 // 引入身份证校验库
 import Validator from 'id-validator'
 import { addPatient, getPatientList, editPatient, delPatient } from '@/api/user'
-import type { PatientList, Patient } from '@/types/user'
+import type { PatientList, Patient, Options } from '@/types/user'
 import { ref, onMounted, computed } from 'vue'
 import { showConfirmDialog, showFailToast, showSuccessToast } from 'vant'
 const defualtPatient: Patient = {
@@ -93,7 +93,7 @@ const defaultFlag = computed({
     patient.value.defaultFlag = value ? 1 : 0
   }
 })
-const options = [
+const options: Options = [
   { label: '男', value: 1 },
   { label: '女', value: 0 }
 ]

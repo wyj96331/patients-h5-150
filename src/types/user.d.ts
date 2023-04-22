@@ -58,3 +58,5 @@ export interface Patient {
 
 // 患者列表信息
 export type PatientList = Patient[]
+
+export type Options = array<{ label: string; value: number | string }>

@@ -9,10 +9,10 @@ defineProps<{
 
 // 自定义事件
 const emit = defineEmits<{
-  (e: 'update:modelValue', data: number): void
+  (e: 'update:modelValue', data: number | string): void
 }>()
 // 触发自定义事件函数
-const toggleItem = (value: number): void => {
+const toggleItem = (value: number | string): void => {
   emit('update:modelValue', value)
 }
 </script>
