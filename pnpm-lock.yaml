@@ -4,6 +4,9 @@ dependencies:
   axios:
     specifier: ^1.3.5
     version: 1.3.5
+  id-validator:
+    specifier: ^1.3.0
+    version: 1.3.0
   pinia:
     specifier: ^2.0.32
     version: 2.0.34(typescript@4.8.4)(vue@3.2.47)
@@ -1948,6 +1951,10 @@ packages:
       inherits: 2.0.4
       readable-stream: 3.6.2
     dev: true
+
+  /id-validator@1.3.0:
+    resolution: {integrity: sha512-f/5FfaCBqdnLmDN3mYDHhZIHlnV6Xk6M6Ef2INT9Ng/IEvwMQYRIgj12ANdvUoaWz3o7SRb39z/fFC4dB64gHA==}
+    dev: false
 
   /ignore@5.2.4:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
