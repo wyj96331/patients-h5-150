@@ -53,6 +53,7 @@ export interface Patient {
    * 患者姓名
    */
   name: string
+  genderValue?: string
 }
 
 // 患者列表信息
