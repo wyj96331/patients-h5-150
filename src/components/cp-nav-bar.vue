@@ -13,7 +13,7 @@ const onClickLeft = () => {
 }
 const props = defineProps<{
   title: string
-  rightText?: string
+  rightText?: string | any
   back?: () => void
 }>()
 const emit = defineEmits<{

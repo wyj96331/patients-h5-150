@@ -7,6 +7,7 @@ const routes = [
       title: '登录'
     }
   },
+  // layout二级路由
   {
     path: '/',
     redirect: '/home',
@@ -46,6 +47,11 @@ const routes = [
     path: '/user/patient',
     component: () => import('@/views/user/PatientInfo.vue'),
     meta: { title: '家庭档案' }
+  },
+  {
+    path: '/consult/fast',
+    component: () => import('@/views/consult/ConsultFast.vue'),
+    meta: { title: '极速问诊' }
   }
 ]
 export default routes

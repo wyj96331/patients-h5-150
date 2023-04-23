@@ -17,3 +17,4 @@ export default pinia
 
 // 在index模块再一次同意导出user模块的变量和方法
 export * from './modules/user'
+export * from './modules/consult'

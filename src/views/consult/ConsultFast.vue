@@ -1,5 +1,3 @@
-<script setup lang="ts"></script>
-
 <template>
   <!-- 1. 极速问诊开始 -->
   <div class="consult-fast-page">
@@ -29,7 +27,7 @@
     </div>
   </div>
 </template>
-
+<script setup lang="ts"></script>
 <style lang="scss" scoped>
 .consult-fast-page {
   padding-top: 46px;
