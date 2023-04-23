@@ -1,4 +1,6 @@
 export type KnowledgeType = 'like' | 'recommend' | 'fatReduction' | 'food'
+// 关注的类型
+export type FollowType = 'doc' | 'knowledge' | 'topic' | 'disease'
 // 通用泛型工具
 export type PageData<T> = {
   pageTotal: number

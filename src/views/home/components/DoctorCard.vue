@@ -4,16 +4,37 @@
     <p class="name">{{ item.name }}</p>
     <p>{{ item.hospitalName }} {{ item.depName }}</p>
     <p>{{ item.positionalTitles }}</p>
-    <van-button round size="small" type="primary">{{
-      item.likeFlag === 1 ? '已关注' : '+关注'
-    }}</van-button>
+    <van-button :loading="loading" @click="follow(item)" round size="small" type="primary">
+      {{ item.likeFlag === 1 ? '已关注' : '+关注' }}
+    </van-button>
   </div>
 </template>
 <script lang="ts" setup>
+import { useFollow } from '@/hooks'
+const { loading, follow } = useFollow()
 import type { Doctor } from '@/types/consult'
+// import { followDoctor } from '@/api/onsult'
+// import { ref } from 'vue'
+// import { showSuccessToast } from 'vant'
 defineProps<{
   item: Doctor
 }>()
+// // 关注逻辑
+// const loading = ref(false)
+// const follow = async (item: Doctor) => {
+//   // 防止重复点击
+//   loading.value = true
+//   try {
+//     await followDoctor(item.id)
+//     item.likeFlag = item.likeFlag === 1 ? 0 : 1
+//     // if (item.likeFlag === 1) showSuccessToast('已关注')
+//     // if (item.likeFlag === 0) showSuccessToast('已取消关注')
+//     showSuccessToast(item.likeFlag === 1 ? '已关注' : '已取消关注')
+//   } finally {
+//     // 无论 try / catch 结果如何都会执行的代码块
+//     loading.value = false
+//   }
+// }
 </script>
 <style scoped lang="scss">
 .doctor-card {
