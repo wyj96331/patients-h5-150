@@ -45,7 +45,7 @@ export const useConsultStore = defineStore(
   {
     // 开启数据持久化
     persist: {
-      key: 'patients-h5'
+      key: 'patients-consult'
     }
   }
 )

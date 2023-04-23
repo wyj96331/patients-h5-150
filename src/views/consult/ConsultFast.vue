@@ -8,7 +8,7 @@
     </div>
     <div class="fast-type">
       <!-- 问诊类型选择 -->
-      <router-link to="/consult/dep" class="item">
+      <router-link @click="store.setIllnessType(1)" to="/consult/dep" class="item">
         <cp-icon class="pic" name="consult-doctor"></cp-icon>
         <div class="info">
           <p>三甲图文问诊</p>
@@ -16,7 +16,7 @@
         </div>
         <van-icon name="arrow"></van-icon>
       </router-link>
-      <router-link to="/consult/dep" class="item">
+      <router-link @click="store.setIllnessType(0)" to="/consult/dep" class="item">
         <cp-icon class="pic" name="consult-message"></cp-icon>
         <div class="info">
           <p>普通图文问诊</p>
@@ -27,7 +27,10 @@
     </div>
   </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useConsultStore } from '@/stores'
+const store = useConsultStore()
+</script>
 <style lang="scss" scoped>
 .consult-fast-page {
   padding-top: 46px;

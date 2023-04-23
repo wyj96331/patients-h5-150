@@ -102,3 +102,13 @@ export type Consult = {
 // 问诊记录-全部可选
 // Required 转换为全部必须  通过 Partial工具 转换问全部可选  两个内置的泛型类型
 export type PartialConsult = Partial<Consult>
+
+export type SubDep = {
+  id: string
+  name: string
+  avatar?: string
+}
+
+export type TopDep = SubDep & {
+  child: SubDep[]
+}
