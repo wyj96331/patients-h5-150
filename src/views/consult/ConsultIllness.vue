@@ -72,21 +72,16 @@ const next = () => {
 onMounted(async () => {
   // 有数据则进行提示，是否回显数据
   if (store.consult.illnessDesc) {
-    try {
-      await showConfirmDialog({
-        title: '提示',
-        message: '您之前有填写病情描述的记录，需要回现吗？',
-        closeOnPopstate: false // 是否在页面回退时自动关闭,注意默认值为true
-      })
-      // 确认回显
-      const { illnessTime, illnessDesc, consultFlag, pictures } = store.consult
-      form.value = { illnessTime, illnessDesc, consultFlag, pictures }
-      // 图片回显预览
-      fileList.value = pictures || []
-    } catch (e) {
-      // 取消回显
-      console.log(e)
-    }
+    await showConfirmDialog({
+      title: '提示',
+      message: '您之前有填写病情描述的记录，需要回现吗？',
+      closeOnPopstate: false // 是否在页面回退时自动关闭,注意默认值为true
+    })
+    // 确认回显
+    const { illnessTime, illnessDesc, consultFlag, pictures } = store.consult
+    form.value = { illnessTime, illnessDesc, consultFlag, pictures }
+    // 图片回显预览
+    fileList.value = pictures || []
   }
 })
 </script>

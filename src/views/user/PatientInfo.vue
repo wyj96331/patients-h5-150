@@ -1,15 +1,21 @@
 <template>
   <div class="patient-page">
     <!--      导航栏-->
-    <cp-nav-bar title="家庭档案" />
+    <cp-nav-bar :title="isChange ? '添加患者' : '家庭档案'" />
     <!-- 头部选择提示 -->
-    <div class="patient-change" v-if="false">
+    <div class="patient-change" v-if="isChange">
       <h3>请选择患者信息</h3>
       <p>以便医生给出更准确的治疗，信息仅医生可见</p>
     </div>
     <!--      患者列表-->
     <div class="patient-list">
-      <div class="patient-item" v-for="item in patientList" :key="item.id">
+      <div
+        class="patient-item"
+        @click="seletePatient(item)"
+        v-for="item in patientList"
+        :key="item.id"
+        :class="{ selected: patientId === item.id }"
+      >
         <div class="info">
           <span class="name">{{ item.name }}</span>
           <span class="id">{{ item.idCard.replace(/^(.{6})(?:\d+)(.{4})$/, '\$1******\$2') }}</span>
@@ -27,8 +33,8 @@
       <div class="patient-tip">最多可添加 6 人</div>
     </div>
     <!-- 患者选择下一步 -->
-    <div class="patient-next" v-if="false">
-      <van-button type="primary" round block>下一步</van-button>
+    <div class="patient-next" v-if="isChange">
+      <van-button @click="next" type="primary" round block>下一步</van-button>
     </div>
     <!-- 侧边栏 -->
     <van-popup v-model:show="show" position="right">
@@ -76,6 +82,18 @@ import { addPatient, getPatientList, editPatient, delPatient } from '@/api/user'
 import type { PatientList, Patient, Options } from '@/types/user'
 import { ref, onMounted, computed } from 'vue'
 import { showConfirmDialog, showFailToast, showSuccessToast } from 'vant'
+import { useRoute, useRouter } from 'vue-router'
+import { useConsultStore } from '@/stores'
+const store = useConsultStore()
+const router = useRouter()
+const route = useRoute()
+// isChange的值为：boolean
+const isChange = computed(() => route.query.isChange === '1')
+// 点击患者时，存储其id
+const patientId = ref<string>()
+const seletePatient = (item: Patient) => {
+  if (isChange.value) patientId.value = item.id
+}
 const defualtPatient: Patient = {
   name: '',
   idCard: '',
@@ -118,6 +136,12 @@ const patientList = ref<PatientList>([])
 const getPatients = async () => {
   const { data } = await getPatientList()
   patientList.value = data
+  // 设置默认选中的ID，当你是选择患者的时候，且有患者信息的时候
+  if (isChange.value && patientList.value.length) {
+    const defPatient = patientList.value.find((item) => item.defaultFlag === 1)
+    if (defPatient) patientId.value = defPatient.id
+    else patientId.value = patientList.value[0].id
+  }
 }
 // 提交添加/编辑表单
 const submit = async () => {
@@ -156,6 +180,12 @@ const handelInput = (e: any) => {
 onMounted(() => {
   getPatients()
 })
+// 跳转支付页面
+const next = () => {
+  if (!patientId.value) return showFailToast('请选择患者')
+  store.setPatient(patientId.value)
+  router.push('/consult/pay')
+}
 </script>
 <style lang="scss" scoped>
 .van-form {

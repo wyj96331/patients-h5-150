@@ -62,6 +62,11 @@ const routes = [
     path: '/consult/illness',
     component: () => import('@/views/consult/ConsultIllness.vue'),
     meta: { title: '病情描述' }
+  },
+  {
+    path: '/consult/pay',
+    component: () => import('@/views/consult/ConsultPay.vue'),
+    meta: { title: '问诊支付' }
   }
 ]
 export default routes
