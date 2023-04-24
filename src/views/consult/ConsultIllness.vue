@@ -1,10 +1,14 @@
 <script setup lang="ts">
 // 患病时间选项
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import type { ConsultIllness, Image } from '@/types/consult'
 // 有赞提供的类型
 import type { UploaderAfterRead, UploaderFileListItem } from 'vant/lib/uploader/types'
 import { uploadImage } from '@/api/onsult'
+import { useConsultStore } from '@/stores'
+import { useRouter } from 'vue-router'
+import { showConfirmDialog } from 'vant'
+
 const fileList = ref<Image[]>([])
 const timeOptions = [
   { label: '一周内', value: 1 },
@@ -31,7 +35,7 @@ const onAfterRead: UploaderAfterRead = async (item) => {
   // 2.调接口,上传图片
   // 上传消息提示
   item.status = 'uploading'
-  item.message = '上传中。。。。'
+  item.message = '上传中...'
   try {
     const data = await uploadImage(item.file)
     item.status = 'done'
@@ -49,6 +53,37 @@ const onAfterRead: UploaderAfterRead = async (item) => {
 const onDeleteImg = (item: UploaderFileListItem) => {
   form.value.pictures = form.value.pictures?.filter((subTtem) => subTtem.url !== item.url)
 }
+const disabled = computed(
+  () =>
+    !form.value.illnessDesc ||
+    !form.value.illnessTime ||
+    // 说明：选择就诊过consultFlag的值为0,会有隐式转换
+    form.value.consultFlag === undefined
+)
+const store = useConsultStore()
+const router = useRouter()
+const next = () => {
+  // 1. 保存数据到store
+  store.setIllness(form.value)
+  // 跳转档案管理：选择患者，需要根据 isChange 实现选择功能
+  router.push('/user/patient?isChange=1')
+}
+// 根据store中是否有数据判断是否需要回显数据
+onMounted(async () => {
+  // 有数据则进行提示，是否回显数据
+  if (store.consult.illnessDesc) {
+    await showConfirmDialog({
+      title: '提示',
+      message: '您之前有填写病情描述的记录，需要回现吗？',
+      closeOnPopstate: false // 是否在页面回退时自动关闭,注意默认值为true
+    })
+    // 确认回显
+    const { illnessTime, illnessDesc, consultFlag, pictures } = store.consult
+    form.value = { illnessTime, illnessDesc, consultFlag, pictures }
+    // 图片回显预览
+    fileList.value = pictures || []
+  }
+})
 </script>
 
 <template>
@@ -94,6 +129,15 @@ const onDeleteImg = (item: UploaderFileListItem) => {
         <p class="tip">上传内容仅医生可见,最多9张图,最大5MB</p>
       </div>
     </div>
+    <van-button
+      style="width: 60%; margin-left: 68px"
+      :disabled="disabled"
+      @click="next"
+      type="primary"
+      block
+      round
+      >下一步</van-button
+    >
   </div>
 </template>
 
