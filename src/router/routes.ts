@@ -57,6 +57,11 @@ const routes = [
     path: '/consult/dep',
     component: () => import('@/views/consult/ConsultDep.vue'),
     meta: { title: '选择科室' }
+  },
+  {
+    path: '/consult/illness',
+    component: () => import('@/views/consult/ConsultIllness.vue'),
+    meta: { title: '病情描述' }
   }
 ]
 export default routes

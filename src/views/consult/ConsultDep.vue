@@ -2,6 +2,8 @@
 import { getAllDpe } from '@/api/onsult'
 import { ref, onMounted, computed } from 'vue'
 import type { TopDep } from '@/types/consult'
+import { useConsultStore } from '@/stores'
+const store = useConsultStore()
 const active = ref(0)
 const allDep = ref<TopDep[]>([])
 const getAllDepFn = async () => {
@@ -25,7 +27,12 @@ const subDep = computed(() => allDep.value[active.value]?.child)
       </van-sidebar>
       <!-- 二级科室 -->
       <div class="sub-dep">
-        <router-link v-for="sub in subDep" :key="sub.id" to="/consult/illness">
+        <router-link
+          @click="store.setDepId(sub.id)"
+          v-for="sub in subDep"
+          :key="sub.id"
+          to="/consult/illness"
+        >
           {{ sub.name }}</router-link
         >
       </div>

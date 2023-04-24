@@ -13,7 +13,7 @@ export const useConsultStore = defineStore(
     //3.记录问诊级别 问诊级别：0普通  1三甲
     const setIllnessType = (type: 0 | 1) => (consult.value.illnessType = type)
 
-    // 4.选择科室页面:记录科室
+    // 4.选择科室页面:记录科室id
     const setDepId = (id: string) => (consult.value.depId = id)
     // 5. 设置病情描述
     const setIllness = (
