@@ -2,6 +2,44 @@
 import RoomStatus from './components/RoomStatus.vue'
 import RoomAction from './components/RoomAction.vue'
 import RoomMessage from './components/RoomMessage.vue'
+import { baseURL } from '@/utils/request'
+import { io } from 'socket.io-client'
+import type { Socket } from 'socket.io-client'
+import { useUserStore } from '@/stores'
+import { useRoute } from 'vue-router'
+import { onMounted, onUnmounted } from 'vue'
+let socket: Socket
+const store = useUserStore()
+const route = useRoute()
+const initSocket = () => {
+  socket = io(baseURL, {
+    auth: {
+      token: `Bearer ${store.user.token}`
+    },
+    query: {
+      orderId: route.query.orderId
+    }
+  })
+  socket.on('connect', () => {
+    console.log('连接成功')
+  })
+  socket.on('error', () => {
+    // 错误异常消息
+    console.log('error')
+  })
+
+  socket.on('disconnect', () => {
+    // 已经断开连接
+    console.log('disconnect')
+  })
+}
+onMounted(() => {
+  initSocket()
+})
+onUnmounted(() => {
+  // 组件销毁时，关闭连接
+  socket.close()
+})
 </script>
 
 <template>
