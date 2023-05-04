@@ -122,7 +122,7 @@ const submit = async () => {
     orderId.value = data
     console.log(orderId)
     // 清空数据
-    store.clear()
+    // store.clear()
   } catch (e) {
     console.log(e)
   }
@@ -152,12 +152,12 @@ const onClose = async () => {
 const payOrder = async () => {
   if (paymentMethod.value === undefined) showFailToast('请选择支付方式')
   showSuccessToast('跳转支付')
-  const res = await getConsultOrderPayUrl({
+  const { data } = await getConsultOrderPayUrl({
     orderId: orderId.value.id,
     paymentMethod: paymentMethod.value!,
-    payCallback: 'http://localhost/room'
+    payCallback: 'http://localhost:5173/room'
   })
-  window.location.href = res.payUrl
+  window.location.href = data.payUrl
 }
 </script>
 <style lang="scss" scoped>

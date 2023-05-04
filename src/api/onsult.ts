@@ -7,7 +7,8 @@ import type {
   DoctorPage,
   FollowType,
   TopDep,
-  Image
+  Image,
+  ConsultOrderItem
 } from '@/types/consult'
 export const getKnowledgePage = (params: KnowledgeParams) =>
   request.get<KnowledgePage>('/patient/home/knowledge', { params })
@@ -63,4 +64,9 @@ export const getConsultOrderPayUrl = (data: {
   paymentMethod: 0 | 1
   orderId: string
   payCallback: string
-}) => request.post<any, { payUrl: string }>('/patient/consult/pay', data)
+}) => request.post<any>('/patient/consult/pay', data)
+
+export const getConsultOrderDetail = (orderId: string) =>
+  request.get<any, { data: ConsultOrderItem }>('/patient/consult/order/detail', {
+    params: { orderId }
+  })

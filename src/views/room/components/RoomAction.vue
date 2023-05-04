@@ -1,13 +1,25 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const text = ref('')
+const emit = defineEmits<{
+  (e: 'send-text', data: string): void
+}>()
+const sendText = () => {
+  emit('send-text', text.value)
+}
+</script>
 
 <template>
   <div class="room-action">
     <van-field
+      v-model="text"
       type="text"
       class="input"
       :border="false"
       placeholder="问医生"
       autocomplete="off"
+      @keyup.enter="sendText"
     ></van-field>
     <van-uploader :preview-image="false">
       <cp-icon name="consult-img" />
