@@ -66,7 +66,21 @@ export const getConsultOrderPayUrl = (data: {
   payCallback: string
 }) => request.post<any>('/patient/consult/pay', data)
 
+// 获取订单详情
 export const getConsultOrderDetail = (orderId: string) =>
   request.get<any, { data: ConsultOrderItem }>('/patient/consult/order/detail', {
     params: { orderId }
   })
+
+// 评价问诊
+export const evaluateConsultOrder = (data: {
+  docId: string // 医生ID
+  orderId: string // 订单ID
+  score: number // 评价星级
+  content: string // 评价留言
+  anonymousFlag: 0 | 1 // 是否匿名评价：1匿名 0实名
+}) => request.post('/patient/order/evaluate', data)
+
+// 查看处方
+export const getPrescriptionPic = (id: string) =>
+  request.get<any, { url: string }>(`/patient/consult/prescription/${id}`)
