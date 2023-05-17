@@ -1,8 +1,10 @@
 import { followDoctor, getPrescriptionPic } from '@/api/onsult'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { showFailToast, showImagePreview, showSuccessToast } from 'vant'
 import type { FollowType } from '@/types/consult'
 import { useClipboard } from '@vueuse/core'
+import type { OrderDetail } from '@/types/medicine'
+import { getMedicalOrderDetail } from '@/api/medicine'
 const { copy, copied, isSupported } = useClipboard()
 // 点击关注文章或医生
 const useFollow = (type: FollowType = 'doc') => {
@@ -53,4 +55,15 @@ const useCopy = () => {
     onCopy
   }
 }
-export { useFollow, useLookPre, useCopy }
+const useMedicineDetil = (id: string) => {
+  const order = ref<OrderDetail>()
+  onMounted(async () => {
+    const { data } = await getMedicalOrderDetail(id)
+    order.value = data
+    console.log(data)
+  })
+  return {
+    order
+  }
+}
+export { useFollow, useLookPre, useCopy, useMedicineDetil }

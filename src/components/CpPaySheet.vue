@@ -33,11 +33,12 @@ import { showFailToast, showSuccessToast } from 'vant'
 import { ref } from 'vue'
 // 支付方式
 const paymentMethod = ref<0 | 1>()
-const { orderId, show } = defineProps<{
+const { orderId, show, payCallback } = defineProps<{
   orderId: string
   actualPayment?: number
   onClose?: () => void
   show: boolean
+  payCallback?: string
 }>()
 const emit = defineEmits<{
   (e: 'update:show', val: boolean): void
@@ -49,7 +50,7 @@ const payOrder = async () => {
   const { data } = await getConsultOrderPayUrl({
     orderId: orderId,
     paymentMethod: paymentMethod.value!,
-    payCallback: 'http://localhost:5173/room'
+    payCallback: payCallback || 'http://localhost:5173/room'
   })
   window.location.href = data.payUrl
 }
