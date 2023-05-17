@@ -35,53 +35,58 @@
       text-align="left"
       @click="submit"
     />
-    <!-- 支付弹层 -->
-    <van-action-sheet
-      :closeable="false"
-      :before-close="onClose"
+    <cp-pay-sheet
       v-model:show="show"
-      title="选择支付方式"
-      :close-on-popstate="false"
-    >
-      <div class="pay-type">
-        <p class="amount">￥{{ payInfo?.actualPayment.toFixed(2) }}</p>
-        <van-cell-group>
-          <van-cell title="微信支付" @click="paymentMethod = 0">
-            <template #icon><cp-icon name="consult-wechat" /></template>
-            <template #extra><van-checkbox :checked="paymentMethod === 0" /></template>
-          </van-cell>
-          <van-cell title="支付宝支付" @click="paymentMethod = 1">
-            <template #icon><cp-icon name="consult-alipay" /></template>
-            <template #extra><van-checkbox :checked="paymentMethod === 1" /></template>
-          </van-cell>
-        </van-cell-group>
-        <div class="btn">
-          <van-button @click="payOrder" type="primary" round block>立即支付</van-button>
-        </div>
-      </div>
-    </van-action-sheet>
+      :order-id="orderId"
+      :actualPayment="payInfo?.actualPayment"
+      :onClose="onClose"
+    />
+    <!--    &lt;!&ndash; 支付弹层 &ndash;&gt;-->
+    <!--    <van-action-sheet-->
+    <!--      :closeable="false"-->
+    <!--      :before-close="onClose"-->
+    <!--      v-model:show="show"-->
+    <!--      title="选择支付方式"-->
+    <!--      :close-on-popstate="false"-->
+    <!--    >-->
+    <!--      <div class="pay-type">-->
+    <!--        <p class="amount">￥{{ payInfo?.actualPayment.toFixed(2) }}</p>-->
+    <!--        <van-cell-group>-->
+    <!--          <van-cell title="微信支付" @click="paymentMethod = 0">-->
+    <!--            <template #icon><cp-icon name="consult-wechat" /></template>-->
+    <!--            <template #extra><van-checkbox :checked="paymentMethod === 0" /></template>-->
+    <!--          </van-cell>-->
+    <!--          <van-cell title="支付宝支付" @click="paymentMethod = 1">-->
+    <!--            <template #icon><cp-icon name="consult-alipay" /></template>-->
+    <!--            <template #extra><van-checkbox :checked="paymentMethod === 1" /></template>-->
+    <!--          </van-cell>-->
+    <!--        </van-cell-group>-->
+    <!--        <div class="btn">-->
+    <!--          <van-button @click="payOrder" type="primary" round block>立即支付</van-button>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </van-action-sheet>-->
   </div>
 </template>
 <script setup lang="ts">
 // 获取预支付订单信息
-import { getConsultOrderPre, createConsultOrder, getConsultOrderPayUrl } from '@/api/onsult'
+import { getConsultOrderPre, createConsultOrder } from '@/api/onsult'
 // 患者的详情信息
 import { getPatientDetail } from '@/api/user'
 import { useConsultStore } from '@/stores'
 import type { ConsultOrderPreData } from '@/types/consult'
 import type { Patient } from '@/types/user'
 import { ref, onMounted } from 'vue'
-import { showFailToast, showConfirmDialog, showSuccessToast } from 'vant'
+import { showFailToast, showConfirmDialog } from 'vant'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 const router = useRouter()
 // 订单id
-const orderId = ref<any>()
+const orderId = ref<string>()
 // 控制支付弹窗
 const agree = ref(false)
 const show = ref(false)
-// 支付方式
-const paymentMethod = ref<0 | 1>()
+
 const store = useConsultStore()
 // 1.定义一个预支付订单信息便令
 const payInfo = ref<ConsultOrderPreData>()
@@ -120,7 +125,7 @@ const submit = async () => {
     const { data } = await createConsultOrder(store.consult)
     // 打开 支付窗口
     show.value = true
-    orderId.value = data
+    orderId.value = data.id
     console.log(orderId)
     // 清空数据
     // store.clear()
@@ -150,16 +155,16 @@ const onClose = async () => {
   }
 }
 // 跳转支付
-const payOrder = async () => {
-  if (paymentMethod.value === undefined) showFailToast('请选择支付方式')
-  showSuccessToast('跳转支付')
-  const { data } = await getConsultOrderPayUrl({
-    orderId: orderId.value.id,
-    paymentMethod: paymentMethod.value!,
-    payCallback: 'http://localhost:5173/room'
-  })
-  window.location.href = data.payUrl
-}
+// const payOrder = async () => {
+//   if (paymentMethod.value === undefined) showFailToast('请选择支付方式')
+//   showSuccessToast('跳转支付')
+//   const { data } = await getConsultOrderPayUrl({
+//     orderId: orderId.value.id,
+//     paymentMethod: paymentMethod.value!,
+//     payCallback: 'http://localhost:5173/room'
+//   })
+//   window.location.href = data.payUrl
+// }
 </script>
 <style lang="scss" scoped>
 .consult-pay-page {

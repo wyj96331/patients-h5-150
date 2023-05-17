@@ -147,3 +147,10 @@ export type ConsultOrderItem = Consult & {
   pointDeduction: number
   actualPayment: number
 }
+// 问诊订单列表
+// 根据通用分页类型定义
+export type ConsultOrderListParams = PageParams & {
+  type: ConsultType
+}
+// api返回的数据类型
+export type ConsultOrderPage = PageData<ConsultOrderItem[]>

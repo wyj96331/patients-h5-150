@@ -7,8 +7,8 @@ import ConsultList from './components/ConsultList.vue'
   <div class="consult-page">
     <cp-nav-bar title="问诊记录" />
     <van-tabs sticky>
-      <van-tab title="找医生"><consult-list :type="1" /></van-tab>
       <van-tab title="极速问诊"><consult-list :type="2" /></van-tab>
+      <van-tab title="找医生"><consult-list :type="1" /></van-tab>
       <van-tab title="开药问诊"><consult-list :type="3" /></van-tab>
     </van-tabs>
   </div>

@@ -1,7 +1,10 @@
-import { followDoctor } from '@/api/onsult'
-import { ref } from 'vue'
-import { showSuccessToast } from 'vant'
+import { followDoctor, getPrescriptionPic } from '@/api/onsult'
+import { ref, watch } from 'vue'
+import { showFailToast, showImagePreview, showSuccessToast } from 'vant'
 import type { FollowType } from '@/types/consult'
+import { useClipboard } from '@vueuse/core'
+const { copy, copied, isSupported } = useClipboard()
+// 点击关注文章或医生
 const useFollow = (type: FollowType = 'doc') => {
   // 关注逻辑
   const loading = ref(false)
@@ -21,5 +24,33 @@ const useFollow = (type: FollowType = 'doc') => {
   }
   return { loading, follow }
 }
-
-export { useFollow }
+const useLookPre = () => {
+  const lookPre = async (id?: string) => {
+    if (!id) return
+    try {
+      const res = await getPrescriptionPic(id)
+      // console.log(res)
+      showImagePreview([res.data.url])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  return {
+    lookPre
+  }
+}
+// 复制文本功能
+const useCopy = () => {
+  const onCopy = (copyText: string) => {
+    if (!isSupported.value) showFailToast('未授权，不支持')
+    copy(copyText || '')
+  }
+  // 2. 复制后提示
+  watch(copied, () => {
+    if (copied.value) showSuccessToast('已复制')
+  })
+  return {
+    onCopy
+  }
+}
+export { useFollow, useLookPre, useCopy }

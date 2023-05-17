@@ -1,5 +1,11 @@
 import { request } from '@/utils/request'
-import type { ConsultOrderPreData, ConsultOrderPreParams, PartialConsult } from '@/types/consult'
+import type {
+  ConsultOrderPreData,
+  ConsultOrderPreParams,
+  PartialConsult,
+  ConsultOrderListParams,
+  ConsultOrderPage
+} from '@/types/consult'
 import type {
   KnowledgeParams,
   KnowledgePage,
@@ -57,7 +63,7 @@ export const getConsultOrderPre = (params: ConsultOrderPreParams) =>
  */
 
 export const createConsultOrder = (data: PartialConsult) =>
-  request.post<any, { data: string }>('/patient/consult/order', data)
+  request.post<any>('/patient/consult/order', data)
 
 // 获取支付地址  0 是微信  1 支付宝
 export const getConsultOrderPayUrl = (data: {
@@ -83,4 +89,13 @@ export const evaluateConsultOrder = (data: {
 
 // 查看处方
 export const getPrescriptionPic = (id: string) =>
-  request.get<any, { url: string }>(`/patient/consult/prescription/${id}`)
+  request.get<any>(`/patient/consult/prescription/${id}`)
+
+// 获取问诊订单记录列表
+export const getConsultOrderList = (params: ConsultOrderListParams) =>
+  request.get<ConsultOrderPage>('/patient/consult/order/list', { params })
+// 取消订单
+export const cancelOrder = (id: string) => request.put(`/patient/order/cancel/${id}`)
+
+// 删除订单
+export const deleteOrder = (id: string) => request.delete(`/patient/order/${id}`)

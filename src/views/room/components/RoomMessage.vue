@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import EvaluateCard from './EvaluateCard.vue'
-import { getPrescriptionPic } from '@/api/onsult'
 import type { Message } from '@/types/room'
 import { MsgType, ConsultTime, PrescriptionStatus } from '@/enums'
 import { flagOptions, timeOptions } from '@/api/constants'
@@ -9,6 +8,8 @@ import type { Image } from '@/types/consult'
 import dayjs from 'dayjs'
 import { useUserStore } from '@/stores'
 import { useRouter } from 'vue-router'
+import { useLookPre } from '@/hooks'
+const { lookPre } = useLookPre()
 const formatTime = (time: string) => dayjs(time).format('HH:mm')
 const store = useUserStore()
 // 图片加载成功=> 执行滚动
@@ -29,16 +30,16 @@ const getIllnessTimeText = (time: ConsultTime) =>
 // 获取是否就诊label信息
 const getConsultFlagText = (flag: 0 | 1) => flagOptions.find((item) => item.value === flag)?.label
 // 查看处方
-const lookPre = async (id?: string) => {
-  if (!id) return
-  try {
-    const res = await getPrescriptionPic(id)
-    // console.log(res)
-    showImagePreview([res.data.url])
-  } catch (error) {
-    console.log(error)
-  }
-}
+// const lookPre = async (id?: string) => {
+//   if (!id) return
+//   try {
+//     const res = await getPrescriptionPic(id)
+//     // console.log(res)
+//     showImagePreview([res.data.url])
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 // 购买药品
 const router = useRouter()
 const buy = (pre?: Prescription) => {
