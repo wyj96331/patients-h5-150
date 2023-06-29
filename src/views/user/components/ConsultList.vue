@@ -42,7 +42,7 @@ const onDelete = (id: string) => {
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <consult-item v-for="i in list" :key="i" :item="i" @on-delete="onDelete" />
+      <consult-item v-for="i in list" :key="i.depId" :item="i" @on-delete="onDelete" />
     </van-list>
   </div>
 </template>

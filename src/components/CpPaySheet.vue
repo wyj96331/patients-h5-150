@@ -9,7 +9,7 @@
     :close-on-popstate="false"
   >
     <div class="pay-type">
-      <p class="amount">￥{{ actualPayment.toFixed(2) }}</p>
+      <p class="amount">￥{{ actualPayment?.toFixed(2) }}</p>
       <van-cell-group>
         <van-cell title="微信支付" @click="paymentMethod = 0">
           <template #icon><cp-icon name="consult-wechat" /></template>

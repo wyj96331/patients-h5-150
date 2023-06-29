@@ -37,7 +37,7 @@
     />
     <cp-pay-sheet
       v-model:show="show"
-      :order-id="orderId"
+      :order-id="(orderId as string)"
       :actualPayment="payInfo?.actualPayment"
       :onClose="onClose"
     />

@@ -106,7 +106,6 @@ const sendImage = (img: Image) => {
 onMounted(() => {
   initSocket()
   getOrderDetail()
-  console.log(list)
 })
 onUnmounted(() => {
   // 组件销毁时，关闭连接

@@ -16,7 +16,6 @@ export const useUserStore = defineStore(
     const setUser = (userData: User) => {
       user.value = userData
     }
-
     /**
      * deleteUser 删除用户信息
      */

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import EvaluateCard from './EvaluateCard.vue'
-import type { Message } from '@/types/room'
+import type { Message, Prescription } from '@/types/room'
 import { MsgType, ConsultTime, PrescriptionStatus } from '@/enums'
 import { flagOptions, timeOptions } from '@/api/constants'
 import { showImagePreview, showFailToast } from 'vant'
